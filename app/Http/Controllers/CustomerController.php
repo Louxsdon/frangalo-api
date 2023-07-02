@@ -37,7 +37,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        //
+        return response()->json($customer);
     }
 
     /**
@@ -45,7 +45,15 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        //
+        $validated = $request->validate([
+            "name" => "required|string|max:100",
+            "phone" => "required|string|max:10",
+            "gender" => "required|in:male,female"
+        ]);
+
+        $customer->update($validated);
+
+        return response()->json(["message" => "Customer updated successfully!"]);
     }
 
     /**
@@ -53,6 +61,7 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        $customer->delete();
+        return response()->json(["message" => "Customer deleted succefully"]);
     }
 }
