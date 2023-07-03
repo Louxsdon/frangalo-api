@@ -10,6 +10,7 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
+        "style",
         "shirt_length",
         "around_arm",
         "waist",

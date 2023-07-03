@@ -25,9 +25,10 @@ class OrderController extends Controller
     {
         $validated = $request->validate([
             "customer_id" => "required|exists:customers,id",
-            "shirt_length" => "required|string|max:10",
+            "style" => "required|string|max:100",
+            "shirt_length" => "nullable|string|max:10",
             "around_arm" => "nullable|string|max:10",
-            "waist" => "required|string|max:10",
+            "waist" => "nullable|string|max:10",
             "neck" => "nullable|string|max:10",
             "trouser_length" => "nullable|string|max:10",
             "shoulder_to_chest" => "nullable|string|max:10",
@@ -60,9 +61,10 @@ class OrderController extends Controller
     public function update(Request $request, Order $order)
     {
         $validated = $request->validate([
-            "shirt_length" => "required|string|max:10",
+            "style" => "required|string|max:100",
+            "shirt_length" => "nullable|string|max:10",
             "around_arm" => "nullable|string|max:10",
-            "waist" => "required|string|max:10",
+            "waist" => "nullable|string|max:10",
             "neck" => "nullable|string|max:10",
             "trouser_length" => "nullable|string|max:10",
             "shoulder_to_chest" => "nullable|string|max:10",
