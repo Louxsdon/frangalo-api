@@ -6,6 +6,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\OrderController;
 
 /*
@@ -34,6 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('customers', CustomerController::class);
     Route::resource('orders', OrderController::class);
     Route::resource('galleries', GalleryController::class);
+    Route::resource('inventories', InventoryController::class);
 });
 
 Route::prefix('auth')->middleware('auth:sanctum')->group(function () {
