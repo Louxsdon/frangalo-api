@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Order;
+use Twilio\Rest\Client;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -78,9 +80,22 @@ class OrderController extends Controller
             "status" => "required|in:pending,started,done",
         ]);
 
-        $order = $order->update($validated);
+        try {
+            $order->update($validated);
+            $customer = $order->customer;
+            $phone_number = '+233' . substr($customer->phone, 1);
 
-        return response()->json(["order" => $order, "message" => "Order updated succefully"]);
+            if ($order->status == "done") {
+                $this->send_sms($phone_number, ": 
+                \nHello $customer->name, your order with id #$order->id ($order->style) has been completed! 
+                \nThanks for doing business with us.
+                \nFrangalo GH");
+            }
+            return response()->json(["order" => $phone_number, "message" => "Order updated succefully!!"]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(["order" => $order, "message" => "Order updated succefully!", "ERROR" => $th->getMessage()]);
+        }
     }
 
     /**
@@ -90,5 +105,14 @@ class OrderController extends Controller
     {
         $order->delete();
         return response()->json(["message" => "Order deleted succefully"]);
+    }
+
+    public function send_sms($phone_number, $message)
+    {
+        $account_sid = env("TWILIO_ACCOUNT_SID");
+        $auth_token = env("TWILIO_AUTH_TOKEN");
+        $twilio_number = env("TWILIO_NUMBER");
+        $client = new Client($account_sid, $auth_token);
+        $client->messages->create($phone_number, ['from' => $twilio_number, 'body' => $message]);
     }
 }
